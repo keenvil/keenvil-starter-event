@@ -1,7 +1,16 @@
 package com.keenvil.event;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
+import com.keenvil.cork.error.KeenvilException;
+import com.keenvil.event.domain.EventHost;
 
 /**
  * Event Module configuration properties.
@@ -10,60 +19,35 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "event")
 public class EventProperties {
 
-  private String host;
-  private int port;
-  private String vhost;
-  private String username;
-  private String password;
-  private int maxConcurrentConsumers;
-
-  public EventProperties() { }
-
-  public String getHost() {
-    return host;
+  private List<EventHost> eventHosts;
+  
+  private EventHost defaultHost;
+  
+  @PostConstruct
+  public void init() {
+    if(eventHosts != null) {
+      List<EventHost> defaults = eventHosts.stream()
+          .filter(tc -> tc.isDefault())
+          .collect(Collectors.toCollection(ArrayList::new));
+    
+      if (defaults.size() != 1) {
+        throw new KeenvilException("Only one event host  must be set"
+            + " as default");
+      }
+      
+      defaultHost = defaults.get(0);
+    }
   }
-
-  public int getPort() {
-    return port;
+  
+  public void setEventHosts(List<EventHost> hosts) {
+    eventHosts = hosts;
   }
-
-  public String getVhost() {
-    return vhost;
+  
+  public List<EventHost> getEventHosts() {
+    return eventHosts;
   }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public int getMaxConcurrentConsumers() {
-    return maxConcurrentConsumers;
-  }
-
-  public void setHost(String theHost) {
-    host = theHost;
-  }
-
-  public void setPort(int thePort) {
-    port = thePort;
-  }
-
-  public void setVhost(String theVhost) {
-    vhost = theVhost;
-  }
-
-  public void setUsername(String theUsername) {
-    username = theUsername;
-  }
-
-  public void setPassword(String thePassword) {
-    password = thePassword;
-  }
-
-  public void setMaxConcurrentConsumers(int theMaxConcurrentConsumers) {
-    maxConcurrentConsumers = theMaxConcurrentConsumers;
+  
+  public EventHost getDefaultHost() {
+    return defaultHost;
   }
 }

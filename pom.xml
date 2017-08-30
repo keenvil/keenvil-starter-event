@@ -29,7 +29,7 @@
     <liquibase.version>3.5.1</liquibase.version>
     <hikaricp.version>2.4.7</hikaricp.version>
     <spring-cloud-vault.version>1.0.0.BUILD-SNAPSHOT</spring-cloud-vault.version>
-
+	<keenvil-cork-starter.version>1.0.0-SNAPSHOT</keenvil-cork-starter.version>
   </properties>
 
   <dependencyManagement>
@@ -112,6 +112,13 @@
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.keenvil</groupId>
+      <artifactId>spring-boot-starter-cork</artifactId>
+      <version>${keenvil-cork-starter.version}</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
