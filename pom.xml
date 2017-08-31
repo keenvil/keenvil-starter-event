@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.keenvil.event</groupId>
-  <artifactId>keenvil-starter-event</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>keenvil-event-starter</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>keenvil-starter-event</name>
@@ -16,16 +16,10 @@
 
     <!-- External dependencies versions -->
 
-    <!-- Overrides Spring Boot hibernate dependecy. -->    
-    <hibernate.version>4.3.11.Final</hibernate.version>
-
     <spring-boot.version>1.4.0.RELEASE</spring-boot.version>
     <validation-api.version>1.0.0.GA</validation-api.version>
     <hibernate-validator.version>4.2.0.Final</hibernate-validator.version>
     <commons-lang3.version>3.4</commons-lang3.version>
-    <commons-codec.version>1.6</commons-codec.version>
-    <jjwt.version>0.6.0</jjwt.version>
-    <springfox.version>2.5.0</springfox.version>
     <spring-security-crypto.version>3.1.0.RELEASE</spring-security-crypto.version>
     <joda-time.version>2.9.3</joda-time.version>
     <easymock.version>3.3</easymock.version>
@@ -35,7 +29,7 @@
     <liquibase.version>3.5.1</liquibase.version>
     <hikaricp.version>2.4.7</hikaricp.version>
     <spring-cloud-vault.version>1.0.0.BUILD-SNAPSHOT</spring-cloud-vault.version>
-
+	<keenvil-cork-starter.version>1.0.0-SNAPSHOT</keenvil-cork-starter.version>
   </properties>
 
   <dependencyManagement>
@@ -63,11 +57,6 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
       <version>${hibernate-validator.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <scope>runtime</scope>
     </dependency>
 
     <!-- Rabbit MQ -->
@@ -99,23 +88,6 @@
       <artifactId>spring-boot-actuator</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.liquibase</groupId>
-      <artifactId>liquibase-core</artifactId>
-      <version>${liquibase.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.tomcat</groupId>
-          <artifactId>tomcat-jdbc</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
     <!-- Testing -->
     <dependency>
       <groupId>com.h2database</groupId>
@@ -140,6 +112,13 @@
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.keenvil</groupId>
+      <artifactId>spring-boot-starter-cork</artifactId>
+      <version>${keenvil-cork-starter.version}</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
