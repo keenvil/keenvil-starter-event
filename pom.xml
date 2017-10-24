@@ -4,7 +4,7 @@
 
   <groupId>com.keenvil.event</groupId>
   <artifactId>keenvil-event-starter</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>keenvil-starter-event</name>
@@ -29,7 +29,7 @@
     <liquibase.version>3.5.1</liquibase.version>
     <hikaricp.version>2.4.7</hikaricp.version>
     <spring-cloud-vault.version>1.0.0.BUILD-SNAPSHOT</spring-cloud-vault.version>
-	<keenvil-cork-starter.version>1.0.0-SNAPSHOT</keenvil-cork-starter.version>
+	<keenvil-cork-starter.version>1.0.1-SNAPSHOT</keenvil-cork-starter.version>
   </properties>
 
   <dependencyManagement>
