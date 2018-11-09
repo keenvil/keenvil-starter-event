@@ -3,7 +3,6 @@ package com.keenvil.event.domain;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.expression.Expression;
 
 /**
  * RabbitTemplate wrapper to use for community based queues.

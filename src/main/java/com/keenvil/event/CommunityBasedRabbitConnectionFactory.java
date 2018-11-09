@@ -17,7 +17,7 @@ public class CommunityBasedRabbitConnectionFactory
   @Autowired
   private CommunityIdentifierResolver communityResolver;
 
-  @Autowired(required = false)
+  @Autowired
   ConsulService consulService;
 
   private static Logger log = getLogger(
