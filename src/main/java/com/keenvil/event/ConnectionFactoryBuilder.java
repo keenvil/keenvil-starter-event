@@ -22,7 +22,7 @@ public class ConnectionFactoryBuilder {
 
   public ConnectionFactory build() {
     
-    log.debug("Building Connection Factory: {}, to host {}, port {}, vhost {}",
+    log.info("Building Connection Factory: {}, to host {}, port {}, vhost {}",
         properties.get("name"), properties.get("host"),
         properties.get("port"), properties.get("vhost"));
 
