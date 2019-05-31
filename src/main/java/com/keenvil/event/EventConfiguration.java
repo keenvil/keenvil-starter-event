@@ -25,8 +25,11 @@ import org.springframework.context.annotation.Configuration;
 public class EventConfiguration {
   
   
-  @Value("${event.listener.maxConcurrentConsumers}")
+  @Value("${event.listener.maxConcurrentConsumers:10}")
   private Integer maxConcurrentConsumers;
+
+  @Value("${event.listener.concurrentConsumers:3}")
+  private Integer concurrentConsumers;
 
   @Bean
   @ConditionalOnMissingBean
@@ -34,6 +37,7 @@ public class EventConfiguration {
     SimpleRabbitListenerContainerFactory factory =
         new SimpleRabbitListenerContainerFactory();
     factory.setConnectionFactory(connectionFactory());
+    factory.setConcurrentConsumers(concurrentConsumers);
     factory.setMaxConcurrentConsumers(maxConcurrentConsumers);
     factory.setMessageConverter(jsonMessageConverter());
     return factory;
@@ -60,7 +64,7 @@ public class EventConfiguration {
     
     CommunityBasedRabbitConnectionFactory connectionFactory =
         new CommunityBasedRabbitConnectionFactory();
-    
+
     connectionFactory.setTargetConnectionFactories(connectionFactories);
     connectionFactory.setDefaultTargetConnectionFactory(
         connectionFactories.get(properties().getDefaultHost().getName()));
