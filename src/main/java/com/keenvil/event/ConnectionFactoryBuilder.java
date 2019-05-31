@@ -12,7 +12,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 
 public class ConnectionFactoryBuilder {
   
-  private Map<String, String> properties = new HashMap<String, String>();
+  private Map<String, String> properties = new HashMap<>();
 
   private static Logger log = getLogger(ConnectionFactoryBuilder.class);
   
