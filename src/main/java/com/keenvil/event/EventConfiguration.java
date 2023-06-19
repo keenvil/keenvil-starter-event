@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
 /**
  * Event module configuration.
  * 
@@ -45,7 +44,7 @@ public class EventConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public ConnectionFactory connectionFactory() {
+  public CommunityBasedRabbitConnectionFactory connectionFactory() {
     Map<Object, ConnectionFactory> connectionFactories =
         new HashMap<Object, ConnectionFactory>();
     
@@ -70,6 +69,38 @@ public class EventConfiguration {
         connectionFactories.get(properties().getDefaultHost().getName()));
     return connectionFactory;
   }
+
+  
+  @Bean
+  @ConditionalOnMissingBean
+  public DefaultRabbitConnectionFactory defaultConnectionFactory() {
+    Map<Object, ConnectionFactory> connectionFactories =
+        new HashMap<Object, ConnectionFactory>();
+    
+    properties().getEventHosts()
+        .stream()
+        .filter(tc -> tc.isDefault())
+        .forEach(tc -> connectionFactories.put(tc.getName(),
+          ConnectionFactoryBuilder.create()
+              .name(tc.getName())
+              .host(tc.getHost())
+              .port(String.valueOf(tc.getPort()))
+              .vhost(tc.getVhost())
+              .username(tc.getUsername())
+              .password(tc.getPassword())
+              .build()
+            ));
+    
+    DefaultRabbitConnectionFactory connectionFactory =
+        new DefaultRabbitConnectionFactory();
+
+    connectionFactory.setTargetConnectionFactories(connectionFactories);
+    connectionFactory.setDefaultTargetConnectionFactory(
+        connectionFactories.get(properties().getDefaultHost().getName()));
+    return connectionFactory;
+  }
+
+
 
   @Bean
   @ConditionalOnMissingBean

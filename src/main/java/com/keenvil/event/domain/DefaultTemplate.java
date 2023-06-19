@@ -1,11 +1,12 @@
 package com.keenvil.event.domain;
 
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+
+import com.keenvil.event.DefaultRabbitConnectionFactory;
 
 /**
  * RabbitTemplate wrapper to use only the default vhost.
@@ -14,7 +15,7 @@ public class DefaultTemplate implements Template {
 
   private RabbitTemplate template;
 
-  public DefaultTemplate(final ConnectionFactory connectionFactory) {
+  public DefaultTemplate(final DefaultRabbitConnectionFactory connectionFactory) {
     template = new RabbitTemplate(connectionFactory);
     ExpressionParser parser = new SpelExpressionParser();
     Expression exp = parser.parseExpression("'default'");

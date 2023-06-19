@@ -4,7 +4,7 @@
 
   <groupId>com.keenvil.event</groupId>
   <artifactId>keenvil-event-starter</artifactId>
-  <version>3.0.0-SNAPSHOT</version>
+  <version>3.1.0</version>
   <packaging>jar</packaging>
 
   <name>keenvil-starter-event</name>
@@ -120,11 +120,11 @@
     </dependency>
   </dependencies>
 
-  <distributionManagement>
-    <snapshotRepository>
-      <id>nexus-snapshots</id>
-      <url>http://nexus.int.myaws.io:8081/repository/maven-snapshots/</url>
-    </snapshotRepository>
+    <distributionManagement>
+    <repository>
+      <id>cork</id>
+      <url>https://maven.pkg.github.com/keenvil/keenvil-starter-event</url>
+    </repository>
   </distributionManagement>
 
   <build>

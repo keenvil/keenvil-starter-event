@@ -1,8 +1,9 @@
 package com.keenvil.event.domain;
 
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.MessageConverter;
+
+import com.keenvil.event.CommunityBasedRabbitConnectionFactory;
 
 /**
  * RabbitTemplate wrapper to use for community based queues.
@@ -11,7 +12,7 @@ public class CommunityBasedTemplate implements Template {
 
   private RabbitTemplate template;
 
-  public CommunityBasedTemplate(final ConnectionFactory connectionFactory) {
+  public CommunityBasedTemplate(final CommunityBasedRabbitConnectionFactory connectionFactory) {
     template = new RabbitTemplate(connectionFactory);
   }
 
