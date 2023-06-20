@@ -3,6 +3,9 @@ package com.keenvil.event;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
+
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -14,6 +17,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.keenvil.event.domain.DefaultTemplate;
+
 /**
  * Event module configuration.
  * 
@@ -22,8 +27,10 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class EventConfiguration {
-  
-  
+
+  private static Logger log = getLogger(
+      EventConfiguration.class);
+
   @Value("${event.listener.maxConcurrentConsumers:10}")
   private Integer maxConcurrentConsumers;
 
@@ -44,7 +51,7 @@ public class EventConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public CommunityBasedRabbitConnectionFactory connectionFactory() {
+  public ConnectionFactory connectionFactory() {
     Map<Object, ConnectionFactory> connectionFactories =
         new HashMap<Object, ConnectionFactory>();
     
@@ -69,7 +76,6 @@ public class EventConfiguration {
         connectionFactories.get(properties().getDefaultHost().getName()));
     return connectionFactory;
   }
-
   
   @Bean
   @ConditionalOnMissingBean
@@ -90,6 +96,9 @@ public class EventConfiguration {
               .password(tc.getPassword())
               .build()
             ));
+
+    log.info("Default Connection Factory: {}",
+        connectionFactories.get(properties().getDefaultHost().getName()));
     
     DefaultRabbitConnectionFactory connectionFactory =
         new DefaultRabbitConnectionFactory();
@@ -99,7 +108,6 @@ public class EventConfiguration {
         connectionFactories.get(properties().getDefaultHost().getName()));
     return connectionFactory;
   }
-
 
 
   @Bean
