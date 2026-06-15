@@ -1,8 +1,6 @@
 package com.keenvil.event;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.annotation.PostConstruct;
 
@@ -27,12 +25,11 @@ public class EventProperties {
   public void init() {
     if(eventHosts != null) {
       List<EventHost> defaults = eventHosts.stream()
-          .filter(tc -> tc.isDefault())
-          .collect(Collectors.toCollection(ArrayList::new));
-    
+          .filter(EventHost::isDefault)
+          .toList();
+
       if (defaults.size() != 1) {
-        throw new KeenvilException("Only one event host  must be set"
-            + " as default");
+        throw new KeenvilException("Only one event host must be set as default");
       }
       
       defaultHost = defaults.get(0);
