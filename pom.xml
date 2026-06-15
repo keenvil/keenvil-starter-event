@@ -4,30 +4,20 @@
 
   <groupId>com.keenvil.event</groupId>
   <artifactId>keenvil-event-starter</artifactId>
-  <version>3.3.0</version>
+  <version>4.0.0</version>
   <packaging>jar</packaging>
 
   <name>keenvil-starter-event</name>
-  <description>Keenvil Event Starter Module</description>
+  <description>Keenvil Event Starter Module — Spring Boot 3.x / Java 21</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>11</java.version>
-
-    <!-- External dependencies versions -->
-
-    <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
-    <validation-api.version>2.0.1.Final</validation-api.version>
-    <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
-    <commons-lang3.version>3.9</commons-lang3.version>
-    <spring-security-crypto.version>5.1.1.RELEASE</spring-security-crypto.version>
-    <joda-time.version>2.10.1</joda-time.version>
-    <easymock.version>4.0.1</easymock.version>
-    <keenvil.version>1.0.0-SNAPSHOT</keenvil.version>
-    <liquibase.version>3.5.1</liquibase.version>
-    <hikaricp.version>3.2.0</hikaricp.version>
-    <keenvil-cork-starter.version>3.0.1</keenvil-cork-starter.version>
-    <jackson-databind.version>2.9.8</jackson-databind.version>
+    <java.version>21</java.version>
+    <spring-boot.version>3.3.12</spring-boot.version>
+    <jackson-databind.version>2.17.2</jackson-databind.version>
+    <commons-lang3.version>3.14.0</commons-lang3.version>
+    <keenvil-cork-starter.version>4.0.0</keenvil-cork-starter.version>
+    <easymock.version>5.2.0</easymock.version>
   </properties>
 
   <dependencyManagement>
@@ -41,7 +31,7 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-  
+
   <dependencies>
     <!-- Commons Utilities -->
     <dependency>
@@ -50,14 +40,7 @@
       <version>${commons-lang3.version}</version>
     </dependency>
 
-    <!-- Hibernate -->
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>${hibernate-validator.version}</version>
-    </dependency>
-
-    <!-- Rabbit MQ -->
+    <!-- RabbitMQ -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-amqp</artifactId>
@@ -69,16 +52,10 @@
       <version>${jackson-databind.version}</version>
     </dependency>
 
+    <!-- Jakarta Validation (replaces javax.validation) -->
     <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${joda-time.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>${validation-api.version}</version>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
     </dependency>
 
     <dependency>
@@ -86,43 +63,35 @@
       <artifactId>spring-boot-actuator</artifactId>
     </dependency>
 
-    <!-- Testing -->
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <version>${easymock.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    
     <dependency>
       <groupId>com.keenvil</groupId>
       <artifactId>spring-boot-starter-cork</artifactId>
       <version>${keenvil-cork-starter.version}</version>
       <scope>provided</scope>
     </dependency>
+
+    <!-- Test -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>${easymock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
-    <distributionManagement>
+  <distributionManagement>
     <repository>
-      <id>cork</id>
+      <id>event</id>
       <url>https://maven.pkg.github.com/keenvil/keenvil-starter-event</url>
     </repository>
   </distributionManagement>
@@ -132,10 +101,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.13.0</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <release>21</release>
         </configuration>
       </plugin>
     </plugins>
@@ -143,17 +111,10 @@
 
   <repositories>
     <repository>
-      <id>jcenter-snapshots</id>
-      <name>jcenter</name>
-      <url>https://jcenter.bintray.com/</url>
-    </repository>
-    <repository>
-      <id>spring-snapshots</id>
-      <name>Spring Snapshots</name>
-      <url>https://repo.spring.io/libs-snapshot</url>
-      <snapshots>
-          <enabled>true</enabled>
-      </snapshots>
+      <id>cork</id>
+      <name>Keenvil Cork Starter</name>
+      <url>https://maven.pkg.github.com/keenvil/spring-boot-starter-cork</url>
     </repository>
   </repositories>
+
 </project>
