@@ -49,9 +49,19 @@ public class EventConfiguration {
     return factory;
   }
 
+  // Tipo de retorno declarado como CommunityBasedRabbitConnectionFactory (no
+  // la interfaz ConnectionFactory): Spring registra el bean bajo el tipo
+  // DECLARADO del metodo @Bean, no el tipo runtime del objeto devuelto.
+  // Consumidores que inyectan por el tipo concreto (p.ej. communityTemplate
+  // en CrowdEventConfig/GuardEventConfig) necesitan que el bean quede
+  // registrado bajo ese tipo especifico; con ConnectionFactory como tipo
+  // declarado, esa inyeccion siempre fallaba con "No qualifying bean" --
+  // enmascarado en produccion hasta ahora porque ninguna app migrada a
+  // Boot 3 habia llegado tan lejos en el arranque (bugs previos de cork).
+  // Sigue siendo asignable a ConnectionFactory para quien inyecte por ahi.
   @Bean
   @ConditionalOnMissingBean
-  public ConnectionFactory connectionFactory() {
+  public CommunityBasedRabbitConnectionFactory connectionFactory() {
     Map<Object, ConnectionFactory> connectionFactories =
         new HashMap<Object, ConnectionFactory>();
     
