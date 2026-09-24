@@ -7,9 +7,11 @@ import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +39,27 @@ public class EventConfiguration {
   @Value("${event.listener.concurrentConsumers:3}")
   private Integer concurrentConsumers;
 
+  /**
+   * Whether a message rejected by a listener is requeued. Default {@code true} keeps the
+   * historical behavior (a poison message is redelivered forever). Set to {@code false} so it is
+   * discarded, or dead-lettered when the queue has a dead-letter exchange.
+   */
+  @Value("${event.listener.requeueRejected:true}")
+  private boolean requeueRejected;
+
+  /** Max delivery attempts before giving up on a message. 0 (default) = no retry interceptor. */
+  @Value("${event.listener.retry.maxAttempts:0}")
+  private int retryMaxAttempts;
+
+  @Value("${event.listener.retry.initialIntervalMs:1000}")
+  private long retryInitialIntervalMs;
+
+  @Value("${event.listener.retry.multiplier:2.0}")
+  private double retryMultiplier;
+
+  @Value("${event.listener.retry.maxIntervalMs:10000}")
+  private long retryMaxIntervalMs;
+
   @Bean
   @ConditionalOnMissingBean
   public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory() {
@@ -46,6 +69,16 @@ public class EventConfiguration {
     factory.setConcurrentConsumers(concurrentConsumers);
     factory.setMaxConcurrentConsumers(maxConcurrentConsumers);
     factory.setMessageConverter(jsonMessageConverter());
+    factory.setDefaultRequeueRejected(requeueRejected);
+    if (retryMaxAttempts > 0) {
+      // After maxAttempts the message is rejected WITHOUT requeue, so it is dead-lettered
+      // (if the queue has a DLX) instead of looping forever.
+      factory.setAdviceChain(RetryInterceptorBuilder.stateless()
+          .maxAttempts(retryMaxAttempts)
+          .backOffOptions(retryInitialIntervalMs, retryMultiplier, retryMaxIntervalMs)
+          .recoverer(new RejectAndDontRequeueRecoverer())
+          .build());
+    }
     return factory;
   }
 
