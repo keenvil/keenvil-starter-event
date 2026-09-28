@@ -4,7 +4,7 @@
 
   <groupId>com.keenvil.event</groupId>
   <artifactId>keenvil-event-starter</artifactId>
-  <version>4.0.3</version>
+  <version>4.1.0</version>
   <packaging>jar</packaging>
 
   <name>keenvil-starter-event</name>
@@ -13,10 +13,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>21</java.version>
-    <spring-boot.version>3.3.12</spring-boot.version>
-    <jackson-databind.version>2.17.2</jackson-databind.version>
+    <spring-boot.version>3.5.16</spring-boot.version>
     <commons-lang3.version>3.14.0</commons-lang3.version>
-    <keenvil-cork-starter.version>4.0.0</keenvil-cork-starter.version>
+    <keenvil-cork-starter.version>4.1.0</keenvil-cork-starter.version>
     <easymock.version>5.2.0</easymock.version>
   </properties>
 
@@ -49,7 +48,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>${jackson-databind.version}</version>
     </dependency>
 
     <!-- Jakarta Validation (replaces javax.validation) -->
