@@ -16,6 +16,7 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -60,6 +61,16 @@ public class EventConfiguration {
   @Value("${event.listener.retry.maxIntervalMs:10000}")
   private long retryMaxIntervalMs;
 
+  /** Micrometer observation (tracing) on listeners and templates. Default false. */
+  @Value("${event.observation.enabled:false}")
+  private boolean observationEnabled;
+
+  @Bean
+  @ConditionalOnProperty(name = "event.observation.enabled", havingValue = "true")
+  public static EventObservationPostProcessor eventObservationPostProcessor() {
+    return new EventObservationPostProcessor();
+  }
+
   @Bean
   @ConditionalOnMissingBean
   public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory() {
@@ -70,6 +81,7 @@ public class EventConfiguration {
     factory.setMaxConcurrentConsumers(maxConcurrentConsumers);
     factory.setMessageConverter(jsonMessageConverter());
     factory.setDefaultRequeueRejected(requeueRejected);
+    factory.setObservationEnabled(observationEnabled);
     if (retryMaxAttempts > 0) {
       // After maxAttempts the message is rejected WITHOUT requeue, so it is dead-lettered
       // (if the queue has a DLX) instead of looping forever.

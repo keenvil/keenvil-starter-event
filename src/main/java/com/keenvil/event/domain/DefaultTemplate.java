@@ -2,6 +2,7 @@ package com.keenvil.event.domain;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.context.ApplicationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -38,6 +39,12 @@ public class DefaultTemplate implements Template {
 
   public void setMessageConverter(final MessageConverter messageConverter) {
     template.setMessageConverter(messageConverter);
+  }
+
+  @Override
+  public void enableObservation(final ApplicationContext applicationContext) {
+    template.setApplicationContext(applicationContext);
+    template.setObservationEnabled(true);
   }
 
   @Override
