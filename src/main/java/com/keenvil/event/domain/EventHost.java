@@ -12,6 +12,7 @@ public class EventHost {
   private int maxConcurrentConsumers;
   private boolean isDefault;
   private String name;
+  private boolean ssl;
 
   public EventHost() { }
 
@@ -78,5 +79,13 @@ public class EventHost {
   public void setName(String theName) {
     Validate.notBlank(theName, "Name cannot be empty.");
     name = theName;
+  }
+
+  public boolean isSsl() {
+    return ssl;
+  }
+
+  public void setSsl(boolean theSsl) {
+    ssl = theSsl;
   }
 }
