@@ -65,6 +65,10 @@ public class EventConfiguration {
   @Value("${event.observation.enabled:false}")
   private boolean observationEnabled;
 
+  /** TLS hacia el broker para todas las conexiones (cada event-host o JSON de Consul puede pisarlo con "ssl"). Default false. */
+  @Value("${event.ssl.enabled:false}")
+  private boolean sslEnabled;
+
   @Bean
   @ConditionalOnProperty(name = "event.observation.enabled", havingValue = "true")
   public static EventObservationPostProcessor eventObservationPostProcessor() {
@@ -120,6 +124,7 @@ public class EventConfiguration {
               .vhost(tc.getVhost())
               .username(tc.getUsername())
               .password(tc.getPassword())
+              .ssl(tc.isSsl() || sslEnabled)
               .build()
             ));
     
@@ -149,6 +154,7 @@ public class EventConfiguration {
               .vhost(tc.getVhost())
               .username(tc.getUsername())
               .password(tc.getPassword())
+              .ssl(tc.isSsl() || sslEnabled)
               .build()
             ));
 

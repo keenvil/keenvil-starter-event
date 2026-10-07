@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.springframework.amqp.rabbit.connection.AbstractRoutingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 
@@ -16,6 +17,9 @@ public class DefaultRabbitConnectionFactory
 
   @Autowired(required = false)
   ConsulService consulService;
+
+  @Value("${event.ssl.enabled:false}")
+  boolean sslEnabled;
 
   private static Logger log = getLogger(
       DefaultRabbitConnectionFactory.class);
@@ -53,6 +57,7 @@ public class DefaultRabbitConnectionFactory
         .vhost((String) connectionFactoryProperties.get("vhost"))
         .username((String) connectionFactoryProperties.get("username"))
         .password((String) connectionFactoryProperties.get("password"))
+        .ssl(ConnectionFactoryBuilder.sslFrom(connectionFactoryProperties.get("ssl"), sslEnabled))
         .build();
   }
 }
