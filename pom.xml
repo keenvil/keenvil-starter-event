@@ -4,7 +4,7 @@
 
   <groupId>com.keenvil.event</groupId>
   <artifactId>keenvil-event-starter</artifactId>
-  <version>4.1.2</version>
+  <version>5.0.0-rc.1</version>
   <packaging>jar</packaging>
 
   <name>keenvil-starter-event</name>
@@ -13,9 +13,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>21</java.version>
-    <spring-boot.version>3.5.16</spring-boot.version>
+    <spring-boot.version>4.1.2</spring-boot.version>
     <commons-lang3.version>3.14.0</commons-lang3.version>
-    <keenvil-cork-starter.version>4.1.0</keenvil-cork-starter.version>
+    <keenvil-cork-starter.version>5.0.0-rc.1</keenvil-cork-starter.version>
     <easymock.version>5.2.0</easymock.version>
   </properties>
 
@@ -46,7 +46,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
+      <groupId>tools.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>
 
@@ -74,6 +74,12 @@
       <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- Solo para el test de compatibilidad del JSON de Rabbit con el converter de Jackson 2 (Boot 3). -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.easymock</groupId>
       <artifactId>easymock</artifactId>
@@ -99,7 +105,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.13.0</version>
+        <version>3.15.0</version>
         <configuration>
           <release>21</release>
         </configuration>
