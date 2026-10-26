@@ -12,7 +12,9 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -90,7 +92,8 @@ public class EventConfiguration {
       // After maxAttempts the message is rejected WITHOUT requeue, so it is dead-lettered
       // (if the queue has a DLX) instead of looping forever.
       factory.setAdviceChain(RetryInterceptorBuilder.stateless()
-          .maxAttempts(retryMaxAttempts)
+          // Spring AMQP 4: maxRetries cuenta solo los reintentos (maxAttempts contaba tambien el primer intento).
+          .maxRetries(retryMaxAttempts - 1)
           .backOffOptions(retryInitialIntervalMs, retryMultiplier, retryMaxIntervalMs)
           .recoverer(new RejectAndDontRequeueRecoverer())
           .build());
@@ -181,7 +184,11 @@ public class EventConfiguration {
   @Bean
   @ConditionalOnMissingBean
   public MessageConverter jsonMessageConverter() {
-    return new Jackson2JsonMessageConverter();
+    // Boot 4 / Jackson 3 (§9.20): mismo JSON que el Jackson2JsonMessageConverter de antes, para que los
+    // mensajes entre servicios Boot 3 y Boot 4 no cambien. Como aquel, ignora propiedades desconocidas.
+    return new JacksonJsonMessageConverter(JsonMapper.builderWithJackson2Defaults()
+        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .build());
   }
 
   @Bean
