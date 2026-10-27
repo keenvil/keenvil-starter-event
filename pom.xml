@@ -4,7 +4,7 @@
 
   <groupId>com.keenvil.event</groupId>
   <artifactId>keenvil-event-starter</artifactId>
-  <version>5.0.0-rc.1</version>
+  <version>5.0.0</version>
   <packaging>jar</packaging>
 
   <name>keenvil-starter-event</name>
@@ -15,7 +15,7 @@
     <java.version>21</java.version>
     <spring-boot.version>4.1.2</spring-boot.version>
     <commons-lang3.version>3.14.0</commons-lang3.version>
-    <keenvil-cork-starter.version>5.0.0-rc.1</keenvil-cork-starter.version>
+    <keenvil-cork-starter.version>5.0.0</keenvil-cork-starter.version>
     <easymock.version>5.2.0</easymock.version>
   </properties>
 
