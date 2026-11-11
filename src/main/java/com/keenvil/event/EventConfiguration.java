@@ -68,6 +68,14 @@ public class EventConfiguration {
   private boolean observationEnabled;
 
   /** TLS hacia el broker para todas las conexiones (cada event-host o JSON de Consul puede pisarlo con "ssl"). Default false. */
+  // Credenciales para los tenants cuyo JSON de Consul no trae usuario/password. Vacias = las del host por defecto.
+  // Para servicios cuyo host por defecto no tiene credenciales reales (crowd, guard: guest de application.yml).
+  @Value("${event.tenant-credentials.username:}")
+  String tenantUsername;
+
+  @Value("${event.tenant-credentials.password:}")
+  String tenantPassword;
+
   @Value("${event.ssl.enabled:false}")
   private boolean sslEnabled;
 
@@ -133,8 +141,7 @@ public class EventConfiguration {
     
     CommunityBasedRabbitConnectionFactory connectionFactory =
         new CommunityBasedRabbitConnectionFactory();
-    connectionFactory.setFallbackCredentials(
-        properties().getDefaultHost().getUsername(), properties().getDefaultHost().getPassword());
+    connectionFactory.setFallbackCredentials(fallbackUsername(), fallbackPassword());
 
     connectionFactory.setTargetConnectionFactories(connectionFactories);
     connectionFactory.setDefaultTargetConnectionFactory(
@@ -168,8 +175,7 @@ public class EventConfiguration {
     
     DefaultRabbitConnectionFactory connectionFactory =
         new DefaultRabbitConnectionFactory();
-    connectionFactory.setFallbackCredentials(
-        properties().getDefaultHost().getUsername(), properties().getDefaultHost().getPassword());
+    connectionFactory.setFallbackCredentials(fallbackUsername(), fallbackPassword());
 
     connectionFactory.setTargetConnectionFactories(connectionFactories);
     connectionFactory.setDefaultTargetConnectionFactory(
@@ -201,4 +207,12 @@ public class EventConfiguration {
     return new EventProperties();
   }
 
+
+  String fallbackUsername() {
+    return ConnectionFactoryBuilder.credential(tenantUsername, properties().getDefaultHost().getUsername());
+  }
+
+  String fallbackPassword() {
+    return ConnectionFactoryBuilder.credential(tenantPassword, properties().getDefaultHost().getPassword());
+  }
 }
