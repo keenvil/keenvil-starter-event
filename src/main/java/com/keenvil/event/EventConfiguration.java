@@ -133,6 +133,8 @@ public class EventConfiguration {
     
     CommunityBasedRabbitConnectionFactory connectionFactory =
         new CommunityBasedRabbitConnectionFactory();
+    connectionFactory.setFallbackCredentials(
+        properties().getDefaultHost().getUsername(), properties().getDefaultHost().getPassword());
 
     connectionFactory.setTargetConnectionFactories(connectionFactories);
     connectionFactory.setDefaultTargetConnectionFactory(
@@ -166,6 +168,8 @@ public class EventConfiguration {
     
     DefaultRabbitConnectionFactory connectionFactory =
         new DefaultRabbitConnectionFactory();
+    connectionFactory.setFallbackCredentials(
+        properties().getDefaultHost().getUsername(), properties().getDefaultHost().getPassword());
 
     connectionFactory.setTargetConnectionFactories(connectionFactories);
     connectionFactory.setDefaultTargetConnectionFactory(

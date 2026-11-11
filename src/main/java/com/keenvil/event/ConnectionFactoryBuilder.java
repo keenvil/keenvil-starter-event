@@ -61,6 +61,18 @@ public class ConnectionFactoryBuilder {
    * TLS de una conexion: la clave "ssl" del JSON de Consul (boolean o "true"/"false") manda;
    * si no esta, vale el default global (event.ssl.enabled).
    */
+  /**
+   * Credencial del tenant o, si el JSON de Consul no la trae (vacia o ausente), la del host por defecto del
+   * servicio (event.event-hosts, que sale de Secrets Manager). Permite sacar usuario y password de los JSON
+   * keenvil/<svc>/queues/rabbit/<tenant> sin romper la conexion, igual que cork con MySQL.
+   */
+  static String credential(final Object fromTenant, final String fallback) {
+    if (fromTenant != null && !String.valueOf(fromTenant).isBlank()) {
+      return String.valueOf(fromTenant);
+    }
+    return fallback;
+  }
+
   static boolean sslFrom(final Object value, final boolean globalDefault) {
     if (value instanceof Boolean) {
       return (Boolean) value;
