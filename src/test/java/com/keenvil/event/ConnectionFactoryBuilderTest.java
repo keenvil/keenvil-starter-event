@@ -43,4 +43,21 @@ public class ConnectionFactoryBuilderTest {
     assertTrue(ConnectionFactoryBuilder.sslFrom(null, true));
     assertTrue(ConnectionFactoryBuilder.sslFrom("", true));
   }
+
+  @Test
+  public void credencialDelTenantGanaSiViene() {
+    assertEquals("tenant", ConnectionFactoryBuilder.credential("tenant", "servicio"));
+  }
+
+  @Test
+  public void credencialVaciaOAusenteUsaLaDelServicio() {
+    assertEquals("servicio", ConnectionFactoryBuilder.credential(null, "servicio"));
+    assertEquals("servicio", ConnectionFactoryBuilder.credential("", "servicio"));
+    assertEquals("servicio", ConnectionFactoryBuilder.credential("  ", "servicio"));
+  }
+
+  @Test
+  public void sinCredencialEnNingunLadoQuedaNull() {
+    org.junit.Assert.assertNull(ConnectionFactoryBuilder.credential(null, null));
+  }
 }

@@ -21,6 +21,15 @@ public class DefaultRabbitConnectionFactory
   @Value("${event.ssl.enabled:false}")
   boolean sslEnabled;
 
+  // Credenciales del host por defecto: se usan cuando el JSON del tenant en Consul no trae usuario/password.
+  private String fallbackUsername;
+  private String fallbackPassword;
+
+  void setFallbackCredentials(final String username, final String password) {
+    this.fallbackUsername = username;
+    this.fallbackPassword = password;
+  }
+
   private static Logger log = getLogger(
       DefaultRabbitConnectionFactory.class);
 
@@ -55,8 +64,8 @@ public class DefaultRabbitConnectionFactory
         .host((String) connectionFactoryProperties.get("host"))
         .port((String) connectionFactoryProperties.get("port"))
         .vhost((String) connectionFactoryProperties.get("vhost"))
-        .username((String) connectionFactoryProperties.get("username"))
-        .password((String) connectionFactoryProperties.get("password"))
+        .username(ConnectionFactoryBuilder.credential(connectionFactoryProperties.get("username"), fallbackUsername))
+        .password(ConnectionFactoryBuilder.credential(connectionFactoryProperties.get("password"), fallbackPassword))
         .ssl(ConnectionFactoryBuilder.sslFrom(connectionFactoryProperties.get("ssl"), sslEnabled))
         .build();
   }
